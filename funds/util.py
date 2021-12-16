@@ -1,5 +1,5 @@
 """Utils"""
-from pathlib import PosixPath
+from functools import partial
 
 
 def get_pyversion():
@@ -31,6 +31,7 @@ def conditional_print(*args, condition, **kwargs):
 
     Intended use:
 
+    >>> from functools import partial
     >>> verbose = True  # in the args of a function, and then in the function do:
     >>> _print = partial(conditional_print, condition=verbose)
     >>> # ... then use _print within function
