@@ -1,7 +1,7 @@
 """Functions to prepare company info jsons"""
 # ---------------------------------------------------------------------------------------
 # util
-
+from functools import partial
 import numpy as np
 
 
@@ -167,29 +167,25 @@ def mk_light_yahoo_companies_info_json(
 
 
 import json
-from dol import zipped_bytes_to_bytes
+from graze import graze
+from dol import zipped_bytes_to_bytes, Pipe
 
+get_yahoo_companies_info = Pipe(
+    partial(content_url, 'json/companies_info.json.zip'),  # make the src url
+    graze,  # get the contents for url (using local cache)
+    zipped_bytes_to_bytes,  # convert zip bytes to unzipped bytes
+    json.loads,  # unjasonize the bytes into a list of dicts
+    pd.DataFrame,  # convert to dataframe
+    pd.DataFrame.transpose  # transform
+)
 
-# get_tw_json = Pipe(get_tw_content, BytesIO, json.loads)
-
-
-def get_yahoo_companies_info_from_github():
-    b = get_tw_content('json/companies_info.json.zip')
-    return json.loads(b)
-
-
-def get_yahoo_companies_info():
-    from graze import graze
-    from dol import zipped_bytes_to_bytes
-
-    content_url = (
-        'https://raw.githubusercontent.com/thorwhalen/content/master/{}'.format
-    )
-    return pd.DataFrame(
-        json.loads(
-            zipped_bytes_to_bytes(graze(content_url('json/companies_info.json.zip')))
-        )
-    ).T
+# def get_yahoo_companies_info():
+#
+#     return pd.DataFrame(
+#         json.loads(
+#             zipped_bytes_to_bytes(graze(content_url('json/companies_info.json.zip')))
+#         )
+#     ).T
 
 
 # ---------------------------------------------------------------------------------------
@@ -201,7 +197,7 @@ def visualize_missing_data(
     *,
     is_missing=pd.isna,
     field_order='most_complete',
-    figsize=(7, 12),
+    figsize=(12, 12),
     heatmap_kwargs=(),
 ):
     """Make a heatmap of missing values of a data frame.
