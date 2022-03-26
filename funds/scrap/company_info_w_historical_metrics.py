@@ -9,16 +9,26 @@ import pandas as pd
 from py2store import FilesOfZip, wrap_kvs, filt_iter, add_ipython_key_completions
 from funds.util import proj_files
 
-SIMFIN_PLUS_ZIP_PATH = str(proj_files.parent / "misc/local/simfin+_2021-07-09.zip")
+
+def to_camel_case(s: str):
+    """
+    >>> to_camel_case('This, (my friend) is camel_case!')
+    'thisMyFriendIsCamelCase'
+    """
+    t = ''.join(x for x in s.title() if x.isalnum())
+    return t[0].lower() + t[1:]
+
+
+SIMFIN_PLUS_ZIP_PATH = str(proj_files.parent / 'misc/local/simfin+_2021-07-09.zip')
 
 
 @add_ipython_key_completions
 @wrap_kvs(
-    key_of_id=lambda k: k[len("data_2021-07-09/") :],
-    id_of_key=lambda k: "data_2021-07-09/" + k,
+    key_of_id=lambda k: k[len('data_2021-07-09/') :],
+    id_of_key=lambda k: 'data_2021-07-09/' + k,
 )
-@wrap_kvs(obj_of_data=lambda x: pd.read_csv(BytesIO(x), delimiter=";"))
-@filt_iter(filt=lambda x: x.endswith(".csv"))
+@wrap_kvs(obj_of_data=lambda x: pd.read_csv(BytesIO(x), delimiter=';'))
+@filt_iter(filt=lambda x: x.endswith('.csv'))
 class SimfinZippedCsvs(FilesOfZip):
     """Dataframes from a csv files within a zip file"""
 
@@ -41,11 +51,11 @@ def get_dflt_info():
 @lru_cache(maxsize=1)
 def get_nums(simfin_zip_path=SIMFIN_PLUS_ZIP_PATH):
     z = get_simfin_src_store(simfin_zip_path)
-    share_prices = z["us-shareprices-daily.csv"]
-    derived_share_prices = z["us-derived-shareprices-daily.csv"]
+    share_prices = z['us-shareprices-daily.csv']
+    derived_share_prices = z['us-derived-shareprices-daily.csv']
 
     nums = pd.merge(
-        share_prices, derived_share_prices, on=["Ticker", "SimFinId", "Date"]
+        share_prices, derived_share_prices, on=['Ticker', 'SimFinId', 'Date']
     )
 
     return nums
@@ -55,7 +65,7 @@ def get_nums(simfin_zip_path=SIMFIN_PLUS_ZIP_PATH):
 @lru_cache(maxsize=1)
 def get_nums_indices_for_ticker(simfin_zip_path=SIMFIN_PLUS_ZIP_PATH):
     nums = get_nums(simfin_zip_path)
-    return nums.groupby("Ticker").indices
+    return nums.groupby('Ticker').indices
 
 
 def _get_from_callback_if_not_df(df):
@@ -64,7 +74,7 @@ def _get_from_callback_if_not_df(df):
     elif callable(df):
         return df()
     else:
-        raise TypeError(f"Unknown type for df: {df}")
+        raise TypeError(f'Unknown type for df: {df}')
 
 
 class TickerHistory(KvReader):
@@ -79,7 +89,7 @@ class TickerHistory(KvReader):
 
     @cached_property
     def nums_idx_for_ticker(self):
-        return self.history_df.groupby("ticker").indices
+        return self.history_df.groupby('ticker').indices
 
     def __iter__(self):
         yield from self.nums_idx_for_ticker
@@ -94,7 +104,7 @@ class TickerInfoJson(KvReader):
         history_df=get_nums_indices_for_ticker,
         info_df=None,
         include=None,
-        key_fields=("ticker", "simfinid"),
+        key_fields=('ticker', 'simfinid'),
         exclude=None,
     ):
         history_df = _get_from_callback_if_not_df(history_df)
@@ -130,11 +140,11 @@ class TickerInfoJson(KvReader):
             t = df[key_field].unique()
             assert len(t) <= 1, (
                 f"key fields values should be unique -- it wasn't the case "
-                f"for the {key_field} (for {k})"
+                f'for the {key_field} (for {k})'
             )
             d.update({key_field: t[0]})
         # info
-        info = self.info_df.T.get("AAPL", None)
+        info = self.info_df.T.get('AAPL', None)
         if info is None:
             info = {}
         else:
@@ -175,8 +185,8 @@ JsonFiles = wrap_kvs(
     Files,
     data_of_obj=to_numpy_aware_json,
     obj_of_data=json.loads,
-    key_of_id=lambda x: x[: -len(".json")],
-    id_of_key=lambda x: x + ".json",
+    key_of_id=lambda x: x[: -len('.json')],
+    id_of_key=lambda x: x + '.json',
 )
 
 # h = TickerInfoJson()
