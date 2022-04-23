@@ -180,7 +180,8 @@ class MyEncoder(json.JSONEncoder):
 from dol import Files, wrap_kvs, Pipe
 from functools import partial
 
-to_numpy_aware_json = Pipe(partial(json.dumps, cls=MyEncoder), str.encode)
+numpy_aware_json_dump = partial(json.dumps, cls=MyEncoder)
+to_numpy_aware_json = Pipe(numpy_aware_json_dump, str.encode)
 JsonFiles = wrap_kvs(
     Files,
     data_of_obj=to_numpy_aware_json,

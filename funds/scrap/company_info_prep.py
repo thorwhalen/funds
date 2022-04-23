@@ -3,7 +3,7 @@
 # util
 from functools import partial
 import numpy as np
-
+from functools import lru_cache
 
 def filtered_list(condition, iterable):
     from typing import Container
@@ -47,6 +47,7 @@ def prepare_info_df(df, rename_cols: dict = None):
     return df
 
 
+@lru_cache
 def get_companies_info():
     from io import BytesIO
     import pandas as pd
