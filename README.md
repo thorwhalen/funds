@@ -1,6 +1,6 @@
 
 # funds
-Historical finance data data and caching
+Historical finance data acquisition and caching
 
 
 To install:	```pip install funds```
