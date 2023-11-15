@@ -5,6 +5,7 @@ from functools import partial
 import numpy as np
 from functools import lru_cache
 
+
 def filtered_list(condition, iterable):
     from typing import Container
 
@@ -96,7 +97,7 @@ def save_nr_schema_records_to_json(df, filepath=None):
 
 
 def only_ints_or_nan(arr, is_missing=np.isnan):
-    """Determines if all non-missing values are 'effectively' ints (e.g. 7.0) """
+    """Determines if all non-missing values are 'effectively' ints (e.g. 7.0)"""
     try:
         not_missing_lidx = ~is_missing(arr)
         return all(arr[not_missing_lidx].astype(int) == arr[not_missing_lidx])
@@ -154,7 +155,7 @@ def get_yahoo_companies_info_from_mongo():
 def mk_light_yahoo_companies_info_json(
     yahoo_df=None, filepath='companies_info_from_yahoo'
 ):
-    from dol import to_zipped_bytes
+    from dol import zip_compress
     from pathlib import Path
 
     if yahoo_df is None:
@@ -162,29 +163,29 @@ def mk_light_yahoo_companies_info_json(
 
     d = df_to_light_records(yahoo_df)
     if filepath.endswith('.zip'):
-        Path(filepath).write_bytes(to_zipped_bytes(json.dumps(d).encode()))
+        Path(filepath).write_bytes(zip_compress(json.dumps(d).encode()))
     else:
         Path(filepath).write_text(json.dumps(d))
 
 
 import json
 from graze import graze
-from dol import zipped_bytes_to_bytes, Pipe
+from dol import zip_decompress, Pipe
 
 get_yahoo_companies_info = Pipe(
     partial(content_url, 'json/companies_info.json.zip'),  # make the src url
     graze,  # get the contents for url (using local cache)
-    zipped_bytes_to_bytes,  # convert zip bytes to unzipped bytes
+    zip_decompress,  # convert zip bytes to unzipped bytes
     json.loads,  # unjasonize the bytes into a list of dicts
     pd.DataFrame,  # convert to dataframe
-    pd.DataFrame.transpose  # transform
+    pd.DataFrame.transpose,  # transform
 )
 
 # def get_yahoo_companies_info():
 #
 #     return pd.DataFrame(
 #         json.loads(
-#             zipped_bytes_to_bytes(graze(content_url('json/companies_info.json.zip')))
+#             zip_decompress(graze(content_url('json/companies_info.json.zip')))
 #         )
 #     ).T
 
@@ -201,9 +202,7 @@ def visualize_missing_data(
     figsize=(12, 12),
     heatmap_kwargs=(),
 ):
-    """Make a heatmap of missing values of a data frame.
-
-    """
+    """Make a heatmap of missing values of a data frame."""
     import matplotlib.pylab as plt
     from seaborn import heatmap
 
