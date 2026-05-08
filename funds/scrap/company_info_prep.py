@@ -7,7 +7,7 @@ from functools import lru_cache
 
 
 def filtered_list(condition, iterable):
-    from typing import Container
+    from collections.abc import Container
 
     if not callable(condition):
         if isinstance(condition, Container):
@@ -87,7 +87,7 @@ def save_nr_schema_records_to_json(df, filepath=None):
     filepath = filepath or 'company_info.json'
     if not filepath.endswith('.json'):
         filepath += '.json'
-    with open(filepath, 'wt') as fp:
+    with open(filepath, 'w') as fp:
         json.dump(list(nr_schema_records(df)), fp)
     return filepath
 
