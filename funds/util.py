@@ -1,4 +1,5 @@
 """Utils"""
+
 from functools import partial
 
 
@@ -16,14 +17,14 @@ if py_version >= (3, 9):
 else:
     from importlib_resources import files
 
-proj_name, *_ = __name__.split('.')
+proj_name, *_ = __name__.split(".")
 
 proj_files = files(proj_name)
-data_files = proj_files / 'data'
+data_files = proj_files / "data"
 
 
 def get_ticker_symbols():
-    return (data_files / 'tickers.txt').read_text().split('\n')
+    return (data_files / "tickers.txt").read_text().split("\n")
 
 
 def conditional_print(*args, condition, **kwargs):
