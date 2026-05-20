@@ -1,0 +1,4 @@
+funds.scrap.dirty_dumping
+=========================
+.. automodule:: funds.scrap.dirty_dumping
+   :members:

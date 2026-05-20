@@ -1,0 +1,4 @@
+funds.scrap.company_info_w_historical_metrics
+=============================================
+.. automodule:: funds.scrap.company_info_w_historical_metrics
+   :members:

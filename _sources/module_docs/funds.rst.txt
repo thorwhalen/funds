@@ -1,0 +1,4 @@
+funds
+=====
+.. automodule:: funds
+   :members:
