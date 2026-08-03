@@ -76,6 +76,7 @@ convention = "google"
 [tool.pytest.ini_options]
 minversion = "6.0"
 testpaths = [
+    "funds",
     "tests",
 ]
 doctest_optionflags = [
