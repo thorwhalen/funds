@@ -7,10 +7,37 @@ build-backend = "hatchling.build"
 [project]
 name = "funds"
 version = "0.0.5"
-description = "Historical finance data data and caching"
+description = "Historical finance data acquisition and caching"
 readme = "README.md"
 requires-python = ">=3.10"
-keywords = []
+license = "Apache-2.0"
+license-files = [
+    "LICENSE",
+]
+keywords = [
+    "finance",
+    "stocks",
+    "tickers",
+    "ticker-symbols",
+    "market-data",
+    "historical-data",
+    "caching",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Financial and Insurance Industry",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Office/Business :: Financial",
+    "Topic :: Office/Business :: Financial :: Investment",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
 authors = [
     { name = "Thor Whalen" },
 ]
@@ -18,11 +45,11 @@ dependencies = [
     "importlib_resources",
 ]
 
-[project.license]
-text = "Apache-2.0"
-
 [project.urls]
 Homepage = "https://github.com/thorwhalen/funds"
+Documentation = "https://thorwhalen.github.io/funds/"
+Repository = "https://github.com/thorwhalen/funds"
+Issues = "https://github.com/thorwhalen/funds/issues"
 
 [project.optional-dependencies]
 dev = [
@@ -76,6 +103,7 @@ convention = "google"
 [tool.pytest.ini_options]
 minversion = "6.0"
 testpaths = [
+    "funds",
     "tests",
 ]
 doctest_optionflags = [
