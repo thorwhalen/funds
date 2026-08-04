@@ -11,9 +11,10 @@ To install:	```pip install funds```
 
 ```python
 from funds import get_ticker_symbols
+
 tickers = get_ticker_symbols()
 len(tickers)
 # 4039
-'GOOG' in tickers
+"GOOG" in tickers
 # True
 ```
